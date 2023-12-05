@@ -2,50 +2,47 @@ import re
 
 file = open('input.txt', 'r')
 lines = file.readlines()
-card_details = []
-card_dups = []
 summary = {}
-
+card_count = {}
 
 def parse_numbers(cd):
     winning_numbers, my_numbers = cd.split('|')
-    winning_numbers = [num.strip() for num in winning_numbers.split(' ') if len(num.strip())>0]
-    my_numbers = [num.strip() for num in my_numbers.split(' ') if len(num.strip())>0]
+    winning_numbers = [num.strip() for num in winning_numbers.split()]
+    my_numbers = [num.strip() for num in my_numbers.split()]
     return winning_numbers, my_numbers
 
-def add_dups(cnt, start):
-    print(cnt, start)
-    for i in range(start, start+cnt+1):
-        print(i)
-        card_dups.append(i)
+def calculate_duplicates(card, wins):
+    # print(cnt, start)
+    this_card_count = card_count[card]
+    for i in range(card+1, card+wins+1):
+        print('card_count for ', i, ' = card_count + ', this_card_count)
+        card_count[i] += this_card_count
     return
 
+line_index = 0
 for line in lines:
-    print(line)
+    # print(line)
     line_info = {}
     card_number, card_details = line.split(':')
     card_number = int(re.sub("[^0-9]", "", card_number))
-    print(card_number)
+    # print(card_number)
     winning_numbers, my_numbers = parse_numbers(card_details) 
     winners = [value for value in my_numbers if value in winning_numbers]
     cnt_winners = len(winners)
-    # add_dups(cnt_winners, card_number)
     summary[card_number]=cnt_winners
-
+    card_count[card_number]=1
+    line_index += 1
+    # if line_index > 10:
+    #     break
     """
     What is needed
     For each card, how many winners, duplicate n+1 + winner count cards
-
     """
 
-# process all the items in card_dups
-for k, v in summary.items():
-     add_dups(v, k)
+max_card_number = max([k for k, v in summary.items()])
+print('max_card_number: ', max_card_number)
 
-add_dups_orig = card_dups.copy()
-for item in add_dups_orig:
-    add_dups(summary[item], item)
+for i in range(1, max_card_number+1):
+    calculate_duplicates(i, summary[i])
 
-print(card_dups)
-print(len(card_dups))
-print(summary)
+print('number of scratch cards:', sum(card_count.values())) #23806951

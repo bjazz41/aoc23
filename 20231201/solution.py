@@ -1,4 +1,7 @@
 # read input.txt
+# export AOC_SESSION=....
+# aocd > input.txt
+
 file = open('input.txt', 'r')
 lines = file.readlines()
 line_answer = []
