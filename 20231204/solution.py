@@ -8,8 +8,8 @@ for line in lines:
     card_number, card_details = line.split(':')
     card_number = card_number.strip()
     winning_numbers, my_numbers = card_details.split('|')
-    winning_numbers = [num.strip() for num in winning_numbers.split(' ') if len(num.strip())>0]
-    my_numbers = [num.strip() for num in my_numbers.split(' ') if len(num.strip())>0]
+    winning_numbers = [num.strip() for num in winning_numbers.split() if len(num.strip())>0]
+    my_numbers = [num.strip() for num in my_numbers.split() if len(num.strip())>0]
 
     winners = [value for value in my_numbers if value in winning_numbers]
 
