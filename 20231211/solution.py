@@ -53,14 +53,29 @@ def find_galaxies(grid: Grid) -> List[Point]:
 def get_dist(pt_a, pt_b):
     return abs(pt_a[0]-pt_b[0]) + abs(pt_a[1]-pt_b[1])
 
-def get_distances(gals):
+def get_distances(gals, p2=False, boundaries=None):
     size = len(gals)
     dist = []
     for i in range(size):
         for j in range(i+1, size):
-            key = f"{gals[i]}, {gals[1]}"
-            dist.append({key: get_dist(gals[i], gals[j])})
+            key = f"{gals[i]}, {gals[j]}"
+            if p2:
+                dist.append({key: get_d2(gals[i], gals[j], boundaries)})
+            else: #p1
+                dist.append({key: get_dist(gals[i], gals[j])})
     return dist
+
+def get_d2(pt1, pt2, boundaries, multiplier=1000000):
+    lat1, lat2 = min(pt1[0], pt2[0]), max(pt1[0], pt2[0])
+    lon1, lon2 = min(pt1[1], pt2[1]), max(pt1[1], pt2[1])
+    def get_dist_dir(p1, p2, multiplier, boundaries_dir):
+        rows_between = list(range(p1, p2+1))
+        cnt_boundaries = len(list(set(rows_between) & set(boundaries_dir)))
+        # print('rows_between', p1, p2, rows_between, boundaries_dir, cnt_boundaries)
+        return abs(p1-p2) + (multiplier-1)*cnt_boundaries
+    dist_lat = get_dist_dir(lat1, lat2, multiplier, boundaries[0])
+    dist_lon = get_dist_dir(lon1, lon2, multiplier, boundaries[1])
+    return dist_lat+dist_lon
 
 def part1(grid):
     grid_clean = append_empties(grid_raw)
@@ -74,7 +89,13 @@ def part1(grid):
 def part2(grid):
     empty_rows = find_empty_rows(grid)
     empty_cols = find_empty_rows(grid, False)
-    print(empty_rows, empty_cols)
+    # print(empty_rows, empty_cols)
+    my_galaxies = find_galaxies(grid)
+    # print(my_galaxies)
+    # dist = get_d2((0,3), (1,7), [empty_rows, empty_cols])
+    distances = get_distances(my_galaxies, p2=True, boundaries=[empty_rows, empty_cols])
+    sum_dist = sum([sum(list(sub.values())) for sub in distances])
+    print(f"The sum of the shortest path between all {len(distances)} pairs of galaxies is {sum_dist}")
 
 if __name__ == '__main__':
     with open(sys.argv[1]) as f: # python solution.py test.txt
