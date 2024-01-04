@@ -30,6 +30,29 @@ def follow_path(start, grid):
     return len(set([(x, y) for x, y, dir in charged]))
 
 
+def get_edges(rows, cols):
+    entry_points = set()
+    # left and right edges
+    for row in range(rows):
+        entry_points.add((row,0,'E'))
+        entry_points.add((row,cols-1,'W'))
+    # top and bottom edges
+    for col in range(cols):
+        entry_points.add((0,col,'S'))
+        entry_points.add((rows-1,col,'N'))
+    return entry_points
+
+
+def part2(grid):
+    entry_points = get_edges(rows=len(grid), cols=len(grid[0]))
+    charge_scores = {}
+    for entry_point in entry_points:
+        charge_scores[entry_point]=follow_path(entry_point, grid)
+    # print(charge_scores)
+    max_val = (max([val for val in charge_scores.values()]))
+    return max_val, charge_scores
+
+
 if __name__ == "__main__":
     with open(sys.argv[1]) as f:  # python solution.py test1.txt
         data = f.read()
@@ -38,4 +61,7 @@ if __name__ == "__main__":
     start = (0, 0, 'E')
     part1 = follow_path(start, grid)
 
+    part2 = part2(grid)
+
     print('part1 answer', part1)
+    print('part2 answer', part2[0])
