@@ -56,6 +56,29 @@ def find_arrangements(springs, groups):
 
     return possibilities
 
+def part1(springs, groups):
+    arrangements = find_arrangements(springs, groups)
+    # print('springs', springs, 'with groups', groups, 'has', len(arrangements), 'possibilities.  They are', arrangements)
+    return len(arrangements)
+
+def p2_txf_springs(springs, multiplier=5):
+    sp = ''
+    for i in range(multiplier):
+        sp += springs + '?'
+    return sp
+
+def p2_txf_groups(groups, multiplier=5):
+    gp = []
+    for i in range(multiplier):
+        gp.extend(groups)
+    return gp
+
+def part2(springs, groups):
+    springs2 = p2_txf_springs(springs)
+    groups2 = p2_txf_groups(groups)
+    arrangements = find_arrangements(springs2, groups2)
+    print('springs', springs, 'with groups', groups, 'has', len(arrangements), 'possibilities.  They are', arrangements)
+    return len(arrangements)
 
 if __name__ == '__main__':
     with open(sys.argv[1]) as f: # python solution.py test.txt
@@ -63,12 +86,13 @@ if __name__ == '__main__':
 
     arrangements = []
     cnt_arr = 0
+    cnt_arr2 = 0
     for line in lines:
         springs, groups = line.strip().split(' ')
         groups = [int(group) for group in groups.split(',')]
-        arrangements = find_arrangements(springs, groups)
-        print('springs', springs, 'with groups', groups, 'has', len(arrangements), 'possibilities.  They are', arrangements)
-        cnt_arr += len(arrangements)
+        # cnt_arr += part1(springs, groups)
+        cnt_arr = part2(springs, groups)
+        
 
         # x = interpret_line('#.#.###')
         # y = unknown_chars('???#.#?##.?')
