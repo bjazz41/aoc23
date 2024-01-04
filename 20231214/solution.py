@@ -1,6 +1,5 @@
 import sys
 
-NORTH = {"grid": "reverse", "sort": "reverse"}
 
 def tilt_direction(grid, dir):
     rg = reverse_grid(grid) if dir in ['N', 'S'] else grid
@@ -29,6 +28,7 @@ def run_cycle(grid):
 def reverse_grid(grid):
     return [[grid[j][i] for j in range(len(grid))] for i in range(len(grid[0]))]
 
+
 def part2(grid, cnt_cycles=1):
     for i in range(cnt_cycles):
         grid = run_cycle(grid)
@@ -43,6 +43,7 @@ def score_me(grid):
         sum += zeroes * weight
         weight -= 1
     return sum
+
 
 def part1(grid):
     rg = reverse_grid(grid)
@@ -59,6 +60,7 @@ def part1(grid):
 
     roll_down_grid = reverse_grid(new_rg)
     return score_me(roll_down_grid)
+
 
 def unpack_grid(grid):
     for row in grid:
